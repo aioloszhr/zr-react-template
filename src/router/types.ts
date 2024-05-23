@@ -5,7 +5,7 @@ export interface MetaProps {
 	order?: number;
 }
 
-export type AppRouteObject = Omit<RouteObject, 'children'> & {
+export type AppRouteObject = Omit<RouteObject, 'children' | 'index'> & {
 	name?: string;
 	meta?: MetaProps;
 	children?: AppRouteObject[];

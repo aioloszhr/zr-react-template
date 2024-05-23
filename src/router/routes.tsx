@@ -2,7 +2,9 @@ import { lazy } from 'react';
 import Layout from '@/layout';
 import { appExpandRoutes } from './appRouteModules';
 
-export default [
+import type { AppRouteObject } from './types';
+
+const routes: AppRouteObject[] = [
 	{
 		path: '/',
 		name: 'Login',
@@ -15,3 +17,5 @@ export default [
 		children: appExpandRoutes()
 	}
 ];
+
+export default routes;
