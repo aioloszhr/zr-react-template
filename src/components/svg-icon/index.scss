@@ -1,0 +1,19 @@
+.svg-icon {
+	position: relative;
+	width: var(--svg-icon-width);
+	height: var(--svg-icon-height);
+	border: none;
+	outline: none;
+	text-align: center;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	fill: currentColor;
+	transform: translateZ(0);
+
+	& svg[data-zriconattribute='svg-icon'] {
+		width: var(--svg-icon-width);
+		height: var(--svg-icon-height);
+		fill: currentColor;
+	}
+}
