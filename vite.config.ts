@@ -56,11 +56,13 @@ export default defineConfig({
 	/** 开发服务器配置 */
 	server: {
 		port: 8080,
+		open: true,
+		cors: true,
 		proxy: {
-			'/zhyy': {
-				target: 'https://10.188.58.44:8081',
+			'/api': {
+				target: 'https://mock.mengxuegu.com/mock/665057e1b462b81cb39165f2',
 				changeOrigin: true,
-				secure: false
+				rewrite: path => path.replace(/^\/api/, '')
 			}
 		}
 	}

@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@ant-design/cssinjs": "^1.20.0",
+		"@ant-design/icons": "^5.3.7",
 		"antd": "^5.17.3",
 		"axios": "^1.7.2",
 		"js-md5": "^0.8.3",

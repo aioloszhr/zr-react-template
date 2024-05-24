@@ -1,7 +1,16 @@
 .layout-wrapper {
 	width: 100vw;
 	height: 100vh;
-	.layout-wrapper__content {
-		width: calc(100vw - 220px);
+	.layout-wrapper__container {
+		.collapse-button {
+			font-size: 1rem;
+			width: 4rem;
+			height: 4rem;
+		}
+		.content {
+			margin: 1.5rem 1rem;
+			padding: 1.5rem;
+			min-height: 15rem;
+		}
 	}
 }

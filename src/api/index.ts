@@ -8,7 +8,7 @@ import type { AxiosConfig, ResultData } from '@/types';
 
 /** axios 相关配置 */
 export const config: AxiosConfig = {
-	baseURL: '', // `const { MODE } = getAppEnvironment()`,
+	baseURL: '/api', // `const { MODE } = getAppEnvironment()`,
 	withCredentials: false, // 是否允许跨域携带 `cookie`
 	timeout: 5 * 1000,
 	headers: {
