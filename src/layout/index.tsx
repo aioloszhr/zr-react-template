@@ -15,8 +15,7 @@ const App: React.FC = () => {
 
 	return (
 		<Layout className='layout-wrapper'>
-			<Sider trigger={null} collapsible collapsed={collapsed}>
-				<div className='demo-logo-vertical' />
+			<Sider trigger={null} theme='light' collapsible collapsed={collapsed}>
 				<LayoutMenu />
 			</Sider>
 			<Layout className='layout-wrapper__container'>

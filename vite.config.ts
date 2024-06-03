@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'node:path';
-import postCssPxToRem from 'postcss-pxtorem';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,16 +21,6 @@ export default defineConfig({
 			scss: {
 				additionalData: `@use "./src/styles/mixins.scss" as *;`
 			}
-		},
-		postcss: {
-			plugins: [
-				postCssPxToRem({
-					rootValue: 16,
-					propList: ['*', '!border'], // 除 border 外所有px 转 rem
-					selectorBlackList: ['.ant-'], // 过滤掉.el-开头的class，不进行rem转换
-					exclude: 'node_modules'
-				})
-			]
 		}
 	},
 	plugins: [

@@ -15,6 +15,7 @@ module.exports = {
 		'prettier/prettier': 'error',
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 		'@typescript-eslint/no-explicit-any': 'off',
-		'@typescript-eslint/ban-types': 'off'
+		'@typescript-eslint/ban-types': 'off',
+		'react-hooks/exhaustive-deps': 'off'
 	}
 };
