@@ -29,14 +29,14 @@ const Logining: React.FC = () => {
 				name='username'
 				rules={[{ required: true, message: '请输入用户名!' }]}
 			>
-				<Input placeholder='请输入用户名' />
+				<Input placeholder='请输入用户名' allowClear />
 			</Form.Item>
 			<Form.Item<FieldType>
 				label='密码'
 				name='password'
 				rules={[{ required: true, message: '请输入密码!' }]}
 			>
-				<Input.Password placeholder='请输入密码' />
+				<Input.Password placeholder='请输入密码' allowClear />
 			</Form.Item>
 			<Form.Item wrapperCol={{ offset: 6, span: 16 }}>
 				<Button type='primary' htmlType='submit'>

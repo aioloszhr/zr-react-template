@@ -11,6 +11,7 @@ const Login: React.FC = () => {
 					<img src={loginLeft} alt='login' />
 				</div>
 				<div className='login-wrapper__content'>
+					<div className='title'>React后台管理平台</div>
 					<LoginForm />
 				</div>
 			</div>
