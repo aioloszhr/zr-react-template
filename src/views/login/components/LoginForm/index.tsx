@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
+import { login } from '@/api/modules/login';
 
 import type { FormProps } from 'antd';
 
@@ -11,9 +12,16 @@ type FieldType = {
 const Logining: React.FC = () => {
 	const navigate = useNavigate();
 
-	const onFinish: FormProps<FieldType>['onFinish'] = async () => {
-		message.success('登录成功！');
-		navigate('/home');
+	const onFinish: FormProps<FieldType>['onFinish'] = values => {
+		const { username, password } = values;
+		login({ username, password }).then(res => {
+			if (res.statusCode === '0000') {
+				message.success(res.message);
+				navigate('/home');
+			} else {
+				message.error(res.message);
+			}
+		});
 	};
 
 	return (

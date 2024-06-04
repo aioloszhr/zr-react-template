@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'node:path';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +23,9 @@ export default defineConfig({
 			scss: {
 				additionalData: `@use "./src/styles/mixins.scss" as *;`
 			}
+		},
+		postcss: {
+			plugins: [tailwindcss, autoprefixer()]
 		}
 	},
 	plugins: [
@@ -59,8 +64,13 @@ export default defineConfig({
 		open: true,
 		cors: true,
 		proxy: {
-			'/api': {
+			'/mock': {
 				target: 'https://mock.mengxuegu.com/mock/665057e1b462b81cb39165f2',
+				changeOrigin: true,
+				rewrite: path => path.replace(/^\/mock/, '')
+			},
+			'/api': {
+				target: 'http://localhost:3000/',
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/api/, '')
 			}
