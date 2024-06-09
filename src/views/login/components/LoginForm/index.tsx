@@ -1,21 +1,40 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
-import { login } from '@/api/modules/login';
+import { login, getCaptcha } from '@/api/modules/login';
+import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 
 import type { FormProps } from 'antd';
 
 type FieldType = {
-	username?: string;
-	password?: string;
+	userName: string;
+	password: string;
+	captcha: string;
+	captchaId: string;
 };
 
 const Logining: React.FC = () => {
+	const [captcha, setCaptcha] = useState<string>('');
+	const [captchaId, setCaptchaId] = useState<string>('');
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		getCaptchaFn();
+	}, []);
+
+	const getCaptchaFn = () => {
+		getCaptcha().then(res => {
+			if (res.code === 200) {
+				setCaptcha(res.data.imageBase64);
+				setCaptchaId(res.data.id);
+			}
+		});
+	};
+
 	const onFinish: FormProps<FieldType>['onFinish'] = values => {
-		const { username, password } = values;
-		login({ username, password }).then(res => {
-			if (res.statusCode === '0000') {
+		values.captchaId = captchaId;
+		login({ ...values }).then(res => {
+			if (res.code === 200) {
 				message.success(res.message);
 				navigate('/home');
 			} else {
@@ -25,29 +44,31 @@ const Logining: React.FC = () => {
 	};
 
 	return (
-		<Form
-			name='basic'
-			labelCol={{ span: 6 }}
-			wrapperCol={{ span: 16 }}
-			onFinish={onFinish}
-			autoComplete='off'
-		>
+		<Form name='basic' onFinish={onFinish} autoComplete='off'>
 			<Form.Item<FieldType>
-				label='用户名'
-				name='username'
+				name='userName'
 				rules={[{ required: true, message: '请输入用户名!' }]}
 			>
-				<Input placeholder='请输入用户名' allowClear />
+				<Input placeholder='请输入用户名' prefix={<UserOutlined />} allowClear />
 			</Form.Item>
 			<Form.Item<FieldType>
-				label='密码'
 				name='password'
 				rules={[{ required: true, message: '请输入密码!' }]}
 			>
-				<Input.Password placeholder='请输入密码' allowClear />
+				<Input.Password placeholder='请输入密码' prefix={<LockOutlined />} allowClear />
 			</Form.Item>
-			<Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-				<Button type='primary' htmlType='submit'>
+			<Form.Item<FieldType>
+				name='captcha'
+				rules={[{ required: true, message: '请输入验证码!' }]}
+			>
+				<Input
+					placeholder='请输入验证码'
+					prefix={<SafetyCertificateOutlined />}
+					suffix={<img src={captcha} />}
+				/>
+			</Form.Item>
+			<Form.Item>
+				<Button className='w-full' type='primary' htmlType='submit'>
 					登录
 				</Button>
 			</Form.Item>
