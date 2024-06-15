@@ -46,10 +46,18 @@ const LayoutMenu: React.FC = () => {
 		return newArr;
 	};
 
+	/** 获取侧边栏菜单数据 */
 	const getMenuData = async () => {
 		const { data } = await getMenuList();
 		if (!data) return;
 		setMenuList(deepLoopFloat(data));
+	};
+
+	/** 切换菜单 */
+	const changeMenu = ({ item, key, keyPath }) => {
+		console.log('item', item);
+		console.log('key', key);
+		console.log('keyPath', keyPath);
 	};
 
 	useEffect(() => {
@@ -61,7 +69,9 @@ const LayoutMenu: React.FC = () => {
 		setSelectedKeys([pathname]);
 	}, [pathname]);
 
-	return <Menu mode='inline' selectedKeys={selectedKeys} items={menuList} />;
+	return (
+		<Menu mode='inline' selectedKeys={selectedKeys} items={menuList} onSelect={changeMenu} />
+	);
 };
 
 export default LayoutMenu;

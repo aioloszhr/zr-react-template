@@ -12,7 +12,7 @@ import type { RouteModules, AppRouteObject } from '@/router/types';
  * 会将 modules 中每一个 ts 文件当作一个路由模块, 即使你以分包的形式创建了路由模块
  */
 export const combineRawRouteModules = () => {
-	const modulesFiles: RouteModules = import.meta.glob('@/router/modules/*.tsx', {
+	const modulesFiles: RouteModules = import.meta.glob('@/router/modules/*.ts', {
 		eager: true
 	});
 

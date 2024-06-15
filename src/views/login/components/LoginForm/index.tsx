@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
-import { login, getCaptcha } from '@/api/modules/login';
 import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { login, getCaptcha } from '@/api/modules/login';
+import { useGlobalStore } from '@/store';
 
 import type { FormProps } from 'antd';
 
@@ -14,6 +15,7 @@ type FieldType = {
 };
 
 const Logining: React.FC = () => {
+	const { setAccessToken, setRefreshToken } = useGlobalStore();
 	const [captcha, setCaptcha] = useState<string>('');
 	const [captchaId, setCaptchaId] = useState<string>('');
 	const navigate = useNavigate();
@@ -25,8 +27,9 @@ const Logining: React.FC = () => {
 	const getCaptchaFn = () => {
 		getCaptcha().then(res => {
 			if (res.code === 200) {
-				setCaptcha(res.data.imageBase64);
-				setCaptchaId(res.data.id);
+				const { imageBase64, id } = res.data;
+				setCaptcha(imageBase64);
+				setCaptchaId(id);
 			}
 		});
 	};
@@ -36,6 +39,9 @@ const Logining: React.FC = () => {
 		login({ ...values }).then(res => {
 			if (res.code === 200) {
 				message.success(res.message);
+				const { accessToken, refreshToken } = res.data;
+				setAccessToken(accessToken);
+				setRefreshToken(refreshToken);
 				navigate('/home');
 			} else {
 				message.error(res.message);

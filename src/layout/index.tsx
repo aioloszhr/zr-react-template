@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import LayoutMenu from './components/Menu';
+import { useGlobalStore } from '@/store';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, theme } from 'antd';
 
@@ -8,10 +11,18 @@ import './index.scss';
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
+	const { accessToken } = useGlobalStore();
+	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
 	const {
 		token: { colorBgContainer, borderRadiusLG }
 	} = theme.useToken();
+
+	useEffect(() => {
+		if (!accessToken) {
+			navigate('/');
+		}
+	}, [navigate, accessToken]);
 
 	return (
 		<Layout className='layout-wrapper'>
@@ -34,7 +45,7 @@ const App: React.FC = () => {
 						borderRadius: borderRadiusLG
 					}}
 				>
-					Content
+					<Outlet />
 				</Content>
 			</Layout>
 		</Layout>
