@@ -11,6 +11,6 @@ export interface CaptchaProps {
 
 /** login 类型 */
 export interface LoginProps {
-	accessToken: string;
+	token: string;
 	refreshToken: string;
 }

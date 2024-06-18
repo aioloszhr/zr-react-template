@@ -5,21 +5,21 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 type State = {
-	accessToken: string;
+	token: string;
 	refreshToken: string;
 };
 
 type Action = {
-	setAccessToken: (accessToken: State['accessToken']) => void;
+	setToken: (token: State['token']) => void;
 	setRefreshToken: (refreshToken: State['refreshToken']) => void;
 };
 
 export const useGlobalStore = create<State & Action>()(
 	devtools(set => ({
-		accessToken: '',
+		token: '',
 		refreshToken: '',
-		setAccessToken: accessToken => {
-			set({ accessToken });
+		setToken: token => {
+			set({ token });
 		},
 		setRefreshToken: refreshToken => {
 			set({ refreshToken });

@@ -11,7 +11,7 @@ import './index.scss';
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
-	const { accessToken } = useGlobalStore();
+	const { token } = useGlobalStore();
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
 	const {
@@ -19,10 +19,10 @@ const App: React.FC = () => {
 	} = theme.useToken();
 
 	useEffect(() => {
-		if (!accessToken) {
+		if (!token) {
 			navigate('/');
 		}
-	}, [navigate, accessToken]);
+	}, [navigate, token]);
 
 	return (
 		<Layout className='layout-wrapper'>

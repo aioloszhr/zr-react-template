@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, message } from 'antd';
+// import { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+import { Form, Input, Button } from 'antd';
 import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
-import { login, getCaptcha } from '@/api/modules/login';
-import { useGlobalStore } from '@/store';
+import loginService from '@/views/login/service';
+// import { useGlobalStore } from '@/store';
+import { useRequest } from '@/hooks/use-request';
 
 import type { FormProps } from 'antd';
 
@@ -15,38 +16,24 @@ type FieldType = {
 };
 
 const Logining: React.FC = () => {
-	const { setAccessToken, setRefreshToken } = useGlobalStore();
-	const [captcha, setCaptcha] = useState<string>('');
-	const [captchaId, setCaptchaId] = useState<string>('');
-	const navigate = useNavigate();
+	// const { setToken, setRefreshToken } = useGlobalStore();
+	// const navigate = useNavigate();
 
-	useEffect(() => {
-		getCaptchaFn();
-	}, []);
-
-	const getCaptchaFn = () => {
-		getCaptcha().then(res => {
-			if (res.code === 200) {
-				const { imageBase64, id } = res.data;
-				setCaptcha(imageBase64);
-				setCaptchaId(id);
-			}
-		});
-	};
+	const { data: captcha } = useRequest(loginService.getCaptcha);
 
 	const onFinish: FormProps<FieldType>['onFinish'] = values => {
-		values.captchaId = captchaId;
-		login({ ...values }).then(res => {
-			if (res.code === 200) {
-				message.success(res.message);
-				const { accessToken, refreshToken } = res.data;
-				setAccessToken(accessToken);
-				setRefreshToken(refreshToken);
-				navigate('/home');
-			} else {
-				message.error(res.message);
-			}
-		});
+		values.captchaId = captcha.id;
+		// login({ ...values }).then(res => {
+		// 	if (res.code === 200) {
+		// 		message.success(res.message);
+		// 		const { token, refreshToken } = res.data;
+		// 		setToken(token);
+		// 		setRefreshToken(refreshToken);
+		// 		navigate('/home');
+		// 	} else {
+		// 		message.error(res.message);
+		// 	}
+		// });
 	};
 
 	return (
@@ -70,7 +57,7 @@ const Logining: React.FC = () => {
 				<Input
 					placeholder='请输入验证码'
 					prefix={<SafetyCertificateOutlined />}
-					suffix={<img src={captcha} />}
+					suffix={<img src={captcha.imageBase64} />}
 				/>
 			</Form.Item>
 			<Form.Item>
