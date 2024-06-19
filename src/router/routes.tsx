@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { createHashRouter } from 'react-router-dom';
 import Layout from '@/layout';
 import { appExpandRoutes } from './appRouteModules';
 
@@ -18,4 +19,4 @@ const routes: AppRouteObject[] = [
 	}
 ];
 
-export default routes;
+export const router = createHashRouter(routes);

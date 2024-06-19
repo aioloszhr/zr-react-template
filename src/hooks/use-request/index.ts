@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Response } from '@/api';
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { Response } from '@/request';
 
 interface RequestOptions {
-	manual?: boolean;
+	manual?: boolean; // 是否手动调用接口
 	defaultParams?: any[];
 }
 
@@ -12,6 +12,7 @@ interface RequestResponse<T> {
 	loading: boolean;
 	run(...params: any): void;
 	runAsync(...params: any): Response<T>;
+	refresh(): void;
 }
 
 export function useRequest<T>(
@@ -21,6 +22,8 @@ export function useRequest<T>(
 	const [loading, setLoading] = useState<boolean>(false);
 	const [data, setData] = useState<T>();
 	const [error, setError] = useState<boolean>();
+
+	const paramsRef = useRef<any[]>([]);
 
 	const resolveData = async () => {
 		setLoading(true);
@@ -32,9 +35,13 @@ export function useRequest<T>(
 
 	const runAsync = useCallback(
 		async (...params: any) => {
+			paramsRef.current = params;
 			setLoading(true);
 			const res = await serviceMethod(...params);
+			const [err, curData] = res;
+			setError(err);
 			setLoading(false);
+			setData(curData);
 			return res;
 		},
 		[serviceMethod]
@@ -42,14 +49,14 @@ export function useRequest<T>(
 
 	const run = useCallback(
 		async (...params: any) => {
-			setLoading(true);
-			const [error, requestData] = await serviceMethod(...params);
-			setLoading(false);
-			setData(requestData);
-			setError(error);
+			await runAsync(...params);
 		},
-		[serviceMethod]
+		[runAsync]
 	);
+
+	const refresh = useCallback(() => {
+		runAsync(...paramsRef.current);
+	}, [runAsync]);
 
 	useEffect(() => {
 		if (!options?.manual) {
@@ -62,6 +69,7 @@ export function useRequest<T>(
 		error,
 		data,
 		run,
-		runAsync
+		runAsync,
+		refresh
 	};
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getMenuList } from '@/api/modules/login';
 import { Menu } from 'antd';
 import * as Icons from '@ant-design/icons';
 
@@ -48,7 +47,7 @@ const LayoutMenu: React.FC = () => {
 
 	/** 获取侧边栏菜单数据 */
 	const getMenuData = async () => {
-		const { data } = await getMenuList();
+		const data = [];
 		if (!data) return;
 		setMenuList(deepLoopFloat(data));
 	};

@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import LayoutMenu from './components/Menu';
 import { useGlobalStore } from '@/store';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, theme } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 import './index.scss';
 
 const { Header, Sider, Content } = Layout;
 
-const App: React.FC = () => {
+const BasicLayout: React.FC = () => {
 	const { token } = useGlobalStore();
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
@@ -52,4 +52,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default BasicLayout;
