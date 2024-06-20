@@ -1,5 +1,3 @@
-// Zustand 状态共享
-
 import { create } from 'zustand';
 
 import { devtools } from 'zustand/middleware';
@@ -15,14 +13,17 @@ type Action = {
 };
 
 export const useGlobalStore = create<State & Action>()(
-	devtools(set => ({
-		token: '',
-		refreshToken: '',
-		setToken: token => {
-			set({ token });
-		},
-		setRefreshToken: refreshToken => {
-			set({ refreshToken });
-		}
-	}))
+	devtools(
+		set => ({
+			token: '',
+			refreshToken: '',
+			setToken: token => {
+				set({ token });
+			},
+			setRefreshToken: refreshToken => {
+				set({ refreshToken });
+			}
+		}),
+		{ name: 'globalStore' }
+	)
 );

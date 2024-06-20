@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
-import LayoutMenu from './components/Menu';
-import { useGlobalStore } from '@/store';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { Button, Layout, theme } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import LayoutMenu from './components/Sider';
+import { useGlobalStore } from '@/store';
 
 import './index.scss';
 
 const { Header, Sider, Content } = Layout;
 
 const BasicLayout: React.FC = () => {
-	const { token } = useGlobalStore();
+	const { refreshToken } = useGlobalStore();
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
 	const {
@@ -19,10 +18,10 @@ const BasicLayout: React.FC = () => {
 	} = theme.useToken();
 
 	useEffect(() => {
-		if (!token) {
+		if (!refreshToken) {
 			navigate('/');
 		}
-	}, [navigate, token]);
+	}, [navigate, refreshToken]);
 
 	return (
 		<Layout className='layout-wrapper'>
