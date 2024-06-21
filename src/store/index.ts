@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { devtools } from 'zustand/middleware';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 type State = {
 	token: string;
@@ -14,16 +14,19 @@ type Action = {
 
 export const useGlobalStore = create<State & Action>()(
 	devtools(
-		set => ({
-			token: '',
-			refreshToken: '',
-			setToken: token => {
-				set({ token });
-			},
-			setRefreshToken: refreshToken => {
-				set({ refreshToken });
-			}
-		}),
+		persist(
+			set => ({
+				token: '',
+				refreshToken: '',
+				setToken: token => {
+					set({ token });
+				},
+				setRefreshToken: refreshToken => {
+					set({ refreshToken });
+				}
+			}),
+			{ name: 'globalStore', storage: createJSONStorage(() => localStorage) }
+		),
 		{ name: 'globalStore' }
 	)
 );

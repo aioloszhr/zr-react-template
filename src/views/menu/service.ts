@@ -14,6 +14,9 @@ const menuService = {
 				...formData
 			}
 		});
+	},
+	addMenu: (menu: Menu) => {
+		return request.post<any>('/api/menu', menu);
 	}
 };
 

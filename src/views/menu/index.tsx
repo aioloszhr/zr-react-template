@@ -15,7 +15,8 @@ const Menu: React.FC = () => {
 		pageSize: 10
 	});
 
-	const [createVisible, setCreateVisible] = useState(false);
+	const [createVisible, setCreateVisible] = useState<boolean>(false);
+	const [curRowData, setCurRowData] = useState<null | Menu>();
 
 	const { loading, runAsync: getMenusByPage } = useRequest(menuService.getMenusByPage, {
 		manual: true
@@ -41,7 +42,7 @@ const Menu: React.FC = () => {
 			},
 			{
 				title: '路由',
-				dataIndex: 'router'
+				dataIndex: 'route'
 			},
 			{
 				title: 'url',
@@ -59,11 +60,24 @@ const Menu: React.FC = () => {
 				title: '操作',
 				align: 'center',
 				width: 200,
-				render: () => {
+				render: (_: string, record: Menu) => {
 					return (
 						<Space split={<Divider type='vertical' />}>
-							<a>添加</a>
-							<a>编辑</a>
+							<a
+								onClick={() => {
+									setCreateVisible(true);
+									setCurRowData(record);
+								}}
+							>
+								添加
+							</a>
+							<a
+								onClick={() => {
+									setCreateVisible(true);
+								}}
+							>
+								编辑
+							</a>
 							<Popconfirm title='是否删除？' placement='topRight'>
 								<a>删除</a>
 							</Popconfirm>
@@ -74,6 +88,21 @@ const Menu: React.FC = () => {
 		],
 		[]
 	);
+
+	// 弹窗取消
+	const cancelHandle = () => {
+		setCreateVisible(false);
+		setCurRowData(null);
+	};
+
+	// 弹窗确定
+	const saveHandle = () => {
+		setCreateVisible(false);
+		setCurRowData(null);
+		if (!curRowData) {
+			getMenus();
+		}
+	};
 
 	const getMenus = async () => {
 		const { current, pageSize } = pagination || {};
@@ -118,8 +147,17 @@ const Menu: React.FC = () => {
 				loading={loading}
 				rowKey='id'
 				tableLayout='fixed'
+				pagination={pagination}
+				expandable={{
+					rowExpandable: () => true
+				}}
 			/>
-			<NewEditForm visible={createVisible} />
+			<NewEditForm
+				visible={createVisible}
+				curRecord={curRowData}
+				onSave={saveHandle}
+				onCancel={cancelHandle}
+			/>
 		</div>
 	);
 };

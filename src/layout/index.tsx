@@ -4,24 +4,47 @@ import { Button, Layout, theme } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import LayoutMenu from './components/Sider';
 import { useGlobalStore } from '@/store';
+import { useUserStore } from '@/store/user';
+import { useRequest } from '@/hooks/use-request';
+import userService from '@/views/user/service';
 
 import './index.scss';
 
 const { Header, Sider, Content } = Layout;
 
 const BasicLayout: React.FC = () => {
-	const { refreshToken } = useGlobalStore();
-	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
+
+	const { refreshToken } = useGlobalStore();
+	const { setCurrentUser } = useUserStore();
+
+	const navigate = useNavigate();
 	const {
 		token: { colorBgContainer, borderRadiusLG }
 	} = theme.useToken();
 
+	const { data: currentUserDetail, run: getCurrentUserDetail } = useRequest(
+		userService.getCurrentUserDetail,
+		{
+			manual: true
+		}
+	);
+
 	useEffect(() => {
 		if (!refreshToken) {
 			navigate('/');
+			return;
 		}
-	}, [navigate, refreshToken]);
+		getCurrentUserDetail();
+	}, [navigate, refreshToken, getCurrentUserDetail]);
+
+	useEffect(() => {
+		setCurrentUser(currentUserDetail);
+	}, [currentUserDetail, setCurrentUser]);
+
+	useEffect(() => {
+		navigate('/menu');
+	}, []);
 
 	return (
 		<Layout className='layout-wrapper'>
