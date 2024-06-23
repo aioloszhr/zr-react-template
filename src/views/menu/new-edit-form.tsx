@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Form, Radio, Input, Select, InputNumber, Switch } from 'antd';
 import { antdIcons } from '@/assets/add-icons';
 import menuService from './service';
+import { antdUtils } from '@/utils/antd.ts';
+import { componentPaths } from '@/config';
 
 import { MenuType, type Menu } from './interface';
-import { antdUtils } from '@/utils/antd.ts';
 
 interface CreateMemuProps {
 	visible: boolean;
@@ -51,6 +52,7 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 			antdUtils.message?.success('新增成功');
 			onSave();
 		}
+		setSaveLoading(false);
 	};
 
 	const renderDirectoryForm = () => {
@@ -66,10 +68,10 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 						}
 					]}
 				>
-					<Input />
+					<Input placeholder='请输入名称' />
 				</Form.Item>
 				<Form.Item label='图标' name='icon'>
-					<Select>
+					<Select placeholder='请选择图标'>
 						{Object.keys(antdIcons).map(key => (
 							<Select.Option key={key}>
 								{React.createElement(antdIcons[key])}
@@ -92,7 +94,7 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 						}
 					]}
 				>
-					<Input />
+					<Input placeholder='请输入路由' />
 				</Form.Item>
 				<Form.Item label='排序号' name='orderNumber'>
 					<InputNumber />
@@ -114,10 +116,57 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 					label='名称'
 					name='name'
 				>
-					<Input />
+					<Input placeholder='请输入名称' />
+				</Form.Item>
+				<Form.Item label='图标' name='icon'>
+					<Select placeholder='请选择图标'>
+						{Object.keys(antdIcons).map(key => (
+							<Select.Option key={key}>
+								{React.createElement(antdIcons[key])}
+							</Select.Option>
+						))}
+					</Select>
+				</Form.Item>
+				<Form.Item
+					tooltip='以/开头，不用手动拼接上级路由。参数格式/:id'
+					label='路由'
+					name='route'
+					rules={[
+						{
+							pattern: /^\//,
+							message: '必须以/开头'
+						},
+						{
+							required: true,
+							message: '不能为空'
+						}
+					]}
+				>
+					<Input placeholder='请输入路由' />
+				</Form.Item>
+				<Form.Item
+					rules={[
+						{
+							required: true,
+							message: '不能为空'
+						}
+					]}
+					label='文件地址'
+					name='filePath'
+				>
+					<Select
+						placeholder='请选择文件地址'
+						options={componentPaths.map(path => ({
+							label: path,
+							value: path
+						}))}
+					/>
 				</Form.Item>
 				<Form.Item valuePropName='checked' label='是否显示' name='show'>
 					<Switch />
+				</Form.Item>
+				<Form.Item label='排序号' name='orderNumber'>
+					<InputNumber />
 				</Form.Item>
 			</>
 		);
