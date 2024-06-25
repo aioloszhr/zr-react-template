@@ -36,6 +36,11 @@ const loginService = {
 		return request.post<TokenDTO>('/api/auth/login', loginDTO);
 	},
 
+	// 退出登录
+	logout() {
+		return request.post<TokenDTO>('/api/auth/logout');
+	},
+
 	// 获取公钥
 	getPublicKey() {
 		return request.get<string>('/api/auth/publicKey');

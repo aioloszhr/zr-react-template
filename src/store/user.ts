@@ -1,16 +1,7 @@
 import { create } from 'zustand';
-
 import { devtools } from 'zustand/middleware';
 
-interface User {
-	id: number;
-	userName: string;
-	nickName: string;
-	phoneNumber: string;
-	email: string;
-	createDate: string;
-	updateDate: string;
-}
+import type { User } from '@/views/user/service';
 
 interface State {
 	currentUser: User | null;

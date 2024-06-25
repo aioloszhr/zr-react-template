@@ -53,7 +53,7 @@ const Logining: React.FC = () => {
 		setToken(data.token);
 		setRefreshToken(data.refreshToken);
 
-		navigate('/system/user');
+		navigate('/');
 	};
 
 	return (

@@ -20,7 +20,7 @@ export interface Menu {
 }
 
 export interface User {
-	id: number;
+	id: string;
 	userName: string;
 	nickName: string;
 	phoneNumber: string;
@@ -36,8 +36,38 @@ export interface User {
 }
 
 const userService = {
+	/** 分页获取用户列表 */
+	getUserListByPage: async (
+		{ current, pageSize }: { current: number; pageSize: number },
+		formData: any
+	) => {
+		return await request.get<PageData<User>>('/api/user/page', {
+			params: {
+				page: current - 1,
+				size: pageSize,
+				...formData
+			}
+		});
+	},
+	/** 获取当前用户信息 */
 	getCurrentUserDetail() {
 		return request.get<User>('/api/auth/current/user');
+	},
+	/** 获取角色 */
+	getRoles: () => {
+		return request.get<any[]>('/api/role/list');
+	},
+	/** 添加用户 */
+	addUser: (data: User) => {
+		return request.post('/api/user', data);
+	},
+	/** 创建用户 */
+	updateUser: (data: User) => {
+		return request.put('/api/user', data);
+	},
+	/** 删除用户 */
+	deleteUser: (id: number) => {
+		return request.delete(`/api/user/${id}`);
 	}
 };
 

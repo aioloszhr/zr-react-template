@@ -49,6 +49,12 @@ class Request {
 		);
 	}
 
+	private reset() {
+		this.requestQueue = [];
+		this.refreshTokenFlag = false;
+		this.requestingCount = 0;
+	}
+
 	private async requestInterceptor(axiosConfig: InternalAxiosRequestConfig): Promise<any> {
 		if ([refreshTokenUrl].includes(axiosConfig.url || '')) {
 			return Promise.resolve(axiosConfig);
@@ -116,7 +122,7 @@ class Request {
 		const { refreshToken } = useGlobalStore.getState();
 
 		if (!refreshToken) {
-			console.log('xxx');
+			this.reset();
 		}
 
 		// 调用刷新接口
@@ -124,7 +130,7 @@ class Request {
 
 		// 如果刷新接口报错
 		if (error) {
-			console.log('xxx');
+			this.reset();
 		}
 
 		// 把新的token设置到新的全局变量中

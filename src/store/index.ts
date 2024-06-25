@@ -5,11 +5,13 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 type State = {
 	token: string;
 	refreshToken: string;
+	collapsed: boolean;
 };
 
 type Action = {
 	setToken: (token: State['token']) => void;
 	setRefreshToken: (refreshToken: State['refreshToken']) => void;
+	setCollapsed: (collapsed: State['collapsed']) => void;
 };
 
 export const useGlobalStore = create<State & Action>()(
@@ -18,11 +20,15 @@ export const useGlobalStore = create<State & Action>()(
 			set => ({
 				token: '',
 				refreshToken: '',
-				setToken: token => {
+				collapsed: true,
+				setToken: (token: State['token']) => {
 					set({ token });
 				},
-				setRefreshToken: refreshToken => {
+				setRefreshToken: (refreshToken: State['refreshToken']) => {
 					set({ refreshToken });
+				},
+				setCollapsed: (collapsed: State['collapsed']) => {
+					set({ collapsed });
 				}
 			}),
 			{ name: 'globalStore', storage: createJSONStorage(() => localStorage) }

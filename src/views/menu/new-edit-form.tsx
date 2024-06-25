@@ -12,11 +12,11 @@ interface CreateMemuProps {
 	onCancel: (flag?: boolean) => void;
 	curRecord?: Menu | null;
 	onSave: () => void;
-	// editData?: Menu | null;
+	editData?: Menu | null;
 }
 
 const CreateMenu: React.FC<CreateMemuProps> = props => {
-	const { visible, curRecord, onCancel, onSave } = props;
+	const { visible, curRecord, onCancel, onSave, editData } = props;
 
 	const [saveLoading, setSaveLoading] = useState(false);
 	const [form] = Form.useForm();
@@ -28,7 +28,9 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 	}, [visible]);
 
 	function setInitValue() {
-		if (curRecord) {
+		if (editData) {
+			form.setFieldsValue(editData);
+		} else if (curRecord) {
 			form.setFieldsValue({
 				show: true,
 				type: curRecord?.type === MenuType.MENU ? MenuType.MENU : MenuType.DIRECTORY
@@ -46,11 +48,24 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 		values.parentId = curRecord?.id || null;
 		if (values.type === MenuType.DIRECTORY) {
 			values.show = true;
+		} else if (values.type === MenuType.BUTTON) {
+			values.show = false;
 		}
-		const [error] = await menuService.addMenu(values);
-		if (!error) {
-			antdUtils.message?.success('新增成功');
-			onSave();
+
+		/** 编辑菜单 */
+		if (editData) {
+			values.parentId = editData.parentId;
+			const [error] = await menuService.updateMenu({ ...editData, ...values });
+			if (!error) {
+				antdUtils.message?.success('更新成功');
+				onSave();
+			}
+		} else {
+			const [error] = await menuService.addMenu(values);
+			if (!error) {
+				antdUtils.message?.success('新增成功');
+				onSave();
+			}
 		}
 		setSaveLoading(false);
 	};
@@ -97,7 +112,7 @@ const CreateMenu: React.FC<CreateMemuProps> = props => {
 					<Input placeholder='请输入路由' />
 				</Form.Item>
 				<Form.Item label='排序号' name='orderNumber'>
-					<InputNumber />
+					<InputNumber style={{ width: 200 }} placeholder='请输入排序号' />
 				</Form.Item>
 			</>
 		);
