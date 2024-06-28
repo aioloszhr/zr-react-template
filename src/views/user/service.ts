@@ -61,7 +61,7 @@ const userService = {
 	addUser: (data: User) => {
 		return request.post('/api/user', data);
 	},
-	/** 创建用户 */
+	/** 更新用户 */
 	updateUser: (data: User) => {
 		return request.put('/api/user', data);
 	},

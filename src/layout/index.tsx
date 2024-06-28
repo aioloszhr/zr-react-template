@@ -1,17 +1,21 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Layout, theme } from 'antd';
 import LayoutMenu from './components/Sider';
 import LayoutHeader from './components/Header';
+import MessageHandle from './components/message-handle';
 import { useGlobalStore } from '@/store';
 import { useUserStore } from '@/store/user';
+import { useMessageStore } from '@/store/message';
 import { useRequest } from '@/hooks/use-request';
+import { useWebSocketMessage } from '@/hooks/use-websocket';
 import userService from '@/views/user/service';
 import { replaceRoutes, router } from '@/router';
 import { components } from '@/config/routes';
+import { MenuType } from '@/views/menu/interface';
 import Result404 from '@/views/404';
 
-import { MenuType } from '@/views/menu/interface';
+import type { SocketMessage } from '@/store/message';
 import type { Menu } from '@/views/user/service';
 
 import './index.scss';
@@ -19,10 +23,12 @@ import './index.scss';
 const { Header, Sider, Content } = Layout;
 
 const BasicLayout: React.FC = () => {
-	const { refreshToken, collapsed } = useGlobalStore();
+	const { refreshToken, collapsed, token } = useGlobalStore();
 	const { setCurrentUser } = useUserStore();
+	const { setLatestMessage } = useMessageStore();
 
 	const navigate = useNavigate();
+	const location = useLocation();
 	const {
 		token: { colorBgContainer, borderRadiusLG }
 	} = theme.useToken();
@@ -32,6 +38,11 @@ const BasicLayout: React.FC = () => {
 		{
 			manual: true
 		}
+	);
+	// 当获取完用户信息后，手动连接
+	const { latestMessage, connect } = useWebSocketMessage(
+		`${window.location.protocol.replace('http', 'ws')}//${window.location.host}/ws/?token=${token}`,
+		{ manual: true }
 	);
 
 	const formatMenus = (
@@ -61,6 +72,17 @@ const BasicLayout: React.FC = () => {
 			};
 		});
 	};
+
+	useEffect(() => {
+		if (latestMessage?.data) {
+			try {
+				const socketMessage = JSON.parse(latestMessage?.data) as SocketMessage;
+				setLatestMessage(socketMessage);
+			} catch {
+				console.error(latestMessage?.data);
+			}
+		}
+	}, [latestMessage]);
 
 	useEffect(() => {
 		if (!refreshToken) {
@@ -127,12 +149,30 @@ const BasicLayout: React.FC = () => {
 
 		setCurrentUser(currentUserDetail);
 
+		// 连接websocket
+		connect && connect();
+
 		// replace一下当前路由，为了触发路由匹配
 		router.navigate(`${location.pathname}${location.search}`, { replace: true });
 	}, [currentUserDetail, setCurrentUser]);
 
+	useEffect(() => {
+		function storageChange(e: StorageEvent) {
+			if (e.key === useGlobalStore.persist.getOptions().name) {
+				useGlobalStore.persist.rehydrate();
+			}
+		}
+
+		window.addEventListener<'storage'>('storage', storageChange);
+
+		return () => {
+			window.removeEventListener<'storage'>('storage', storageChange);
+		};
+	}, []);
+
 	return (
 		<Layout className='layout-wrapper'>
+			<MessageHandle />
 			<Sider trigger={null} theme='light' collapsible collapsed={collapsed}>
 				<LayoutMenu />
 			</Sider>

@@ -62,17 +62,17 @@ export default defineConfig({
 	server: {
 		port: 8080,
 		open: true,
-		cors: true,
 		proxy: {
-			'/mock': {
-				target: 'https://mock.mengxuegu.com/mock/665057e1b462b81cb39165f2',
-				changeOrigin: true,
-				rewrite: path => path.replace(/^\/mock/, '')
-			},
 			'/api': {
-				target: 'http://localhost:3000/',
+				target: 'http://localhost:3000',
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/api/, '')
+			},
+			'/ws': {
+				target: 'ws://localhost:3000',
+				ws: true,
+				changeOrigin: true,
+				rewrite: path => path.replace(/^\/ws/, '')
 			}
 		}
 	}
