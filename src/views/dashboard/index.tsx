@@ -107,7 +107,7 @@ const Dashboard = () => {
 								]}
 								defaultValue='today'
 								size='large'
-								dropdownMatchSelectWidth={false}
+								popupMatchSelectWidth={false}
 								placement='bottomRight'
 							/>
 						</div>
@@ -153,7 +153,7 @@ const Dashboard = () => {
 						<div className='bg-[rgb(237,231,246)] rounded-b-lg'>
 							<DemoTinyArea />
 						</div>
-						<div className='py-[24px]'>
+						<div className='p-t-[24px]'>
 							<div>
 								<div className='flex justify-between items-center'>
 									<span className='text-[rgb(54,65,82)] font-medium'>
@@ -219,23 +219,6 @@ const Dashboard = () => {
 								</div>
 								<div className='text-[rgb(0,200,83)] text-[12px] mt-[6px]'>
 									14% 利润
-								</div>
-							</div>
-							<Divider className='bg-[rgb(227,232,239)] my-[16px]' />
-							<div>
-								<div className='flex justify-between items-center'>
-									<span className='text-[rgb(54,65,82)] font-medium'>
-										南京分店
-									</span>
-									<div>
-										<span className='mr-[8px] text-[rgb(54,65,82)] font-medium'>
-											￥7,423
-										</span>
-										<CaretDownOutlined className='text-[rgb(216,67,21)]' />
-									</div>
-								</div>
-								<div className='text-[rgb(0,200,83)] text-[12px] mt-[6px] text-[rgb(216,67,21)]'>
-									6% 亏损
 								</div>
 							</div>
 						</div>

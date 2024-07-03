@@ -1,9 +1,10 @@
-import React, { useEffect, lazy, Suspense } from 'react';
-import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import React, { useEffect, lazy, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Layout, theme } from 'antd';
 import LayoutMenu from './components/Sider';
 import LayoutHeader from './components/Header';
 import MessageHandle from './components/message-handle';
+import TabsLayout from './components/tabs-layout';
 import { useGlobalStore } from '@/store';
 import { useUserStore } from '@/store/user';
 import { useMessageStore } from '@/store/message';
@@ -19,12 +20,13 @@ import type { SocketMessage } from '@/store/message';
 import type { Menu } from '@/views/user/service';
 
 import './index.scss';
+import GloablLoading from '@/components/global-loading/index.tsx';
 
 const { Header, Sider, Content } = Layout;
 
 const BasicLayout: React.FC = () => {
 	const { refreshToken, collapsed, token } = useGlobalStore();
-	const { setCurrentUser } = useUserStore();
+	const { setCurrentUser, currentUser } = useUserStore();
 	const { setLatestMessage } = useMessageStore();
 
 	const navigate = useNavigate();
@@ -32,6 +34,7 @@ const BasicLayout: React.FC = () => {
 	const {
 		token: { colorBgContainer, borderRadiusLG }
 	} = theme.useToken();
+	const [loading, setLoading] = useState(true);
 
 	const { data: currentUserDetail, run: getCurrentUserDetail } = useRequest(
 		userService.getCurrentUserDetail,
@@ -148,6 +151,7 @@ const BasicLayout: React.FC = () => {
 		]);
 
 		setCurrentUser(currentUserDetail);
+		setLoading(false);
 
 		// 连接websocket
 		connect && connect();
@@ -170,6 +174,11 @@ const BasicLayout: React.FC = () => {
 		};
 	}, []);
 
+	/** 动态路由加载完成后，才开始渲染页面，否则会出现白屏问题 */
+	if (loading || !currentUser) {
+		return <GloablLoading />;
+	}
+
 	return (
 		<Layout className='layout-wrapper'>
 			<MessageHandle />
@@ -187,9 +196,7 @@ const BasicLayout: React.FC = () => {
 						borderRadius: borderRadiusLG
 					}}
 				>
-					<Suspense fallback={<div>loading...</div>}>
-						<Outlet />
-					</Suspense>
+					<TabsLayout />
 				</Content>
 			</Layout>
 		</Layout>
