@@ -77,9 +77,7 @@ const TabsLayout: React.FC = () => {
 				label: renderTabTitle(tab),
 				children: (
 					<Suspense fallback={<div>loading...</div>}>
-						<div key={tab.key} className='px-[16px]'>
-							{tab.children}
-						</div>
+						<div key={tab.key}>{tab.children}</div>
 					</Suspense>
 				),
 				closable: tabs.length > 1 // 剩最后一个就不能删除了

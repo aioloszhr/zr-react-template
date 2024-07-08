@@ -1,9 +1,9 @@
 import React, { useEffect, lazy, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Layout, theme } from 'antd';
-import LayoutMenu from './components/Sider';
-import LayoutHeader from './components/Header';
 import MessageHandle from './components/message-handle';
+import Sider from './components/Sider';
+import Header from './components/Header';
+import Content from './components/content';
 import TabsLayout from './components/tabs-layout';
 import { useGlobalStore } from '@/store';
 import { useUserStore } from '@/store/user';
@@ -22,18 +22,13 @@ import type { Menu } from '@/views/user/service';
 import './index.scss';
 import GloablLoading from '@/components/global-loading/index.tsx';
 
-const { Header, Sider, Content } = Layout;
-
 const BasicLayout: React.FC = () => {
-	const { refreshToken, collapsed, token } = useGlobalStore();
+	const { refreshToken, token } = useGlobalStore();
 	const { setCurrentUser, currentUser } = useUserStore();
 	const { setLatestMessage } = useMessageStore();
 
 	const navigate = useNavigate();
 	const location = useLocation();
-	const {
-		token: { colorBgContainer, borderRadiusLG }
-	} = theme.useToken();
 	const [loading, setLoading] = useState(true);
 
 	const { data: currentUserDetail, run: getCurrentUserDetail } = useRequest(
@@ -180,26 +175,14 @@ const BasicLayout: React.FC = () => {
 	}
 
 	return (
-		<Layout className='layout-wrapper'>
+		<div className='overflow-hidden'>
 			<MessageHandle />
-			<Sider trigger={null} theme='light' collapsible collapsed={collapsed}>
-				<LayoutMenu />
-			</Sider>
-			<Layout className='layout-wrapper__container'>
-				<Header style={{ padding: 0, background: colorBgContainer }}>
-					<LayoutHeader />
-				</Header>
-				<Content
-					className='content'
-					style={{
-						background: colorBgContainer,
-						borderRadius: borderRadiusLG
-					}}
-				>
-					<TabsLayout />
-				</Content>
-			</Layout>
-		</Layout>
+			<Header />
+			<Sider />
+			<Content>
+				<TabsLayout />
+			</Content>
+		</div>
 	);
 };
 
