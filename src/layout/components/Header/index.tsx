@@ -40,7 +40,7 @@ const Header: React.FC = () => {
 					</h1>
 				)}
 			</div>
-			<div className='flex items-center justify-between flex-1 pr-[24px]'>
+			<div className='flex items-center justify-between flex-1 pr-[12px]'>
 				<div className='flex items-center justify-center gap-[16px]'>
 					<div
 						className='w-[34px] text-[16px] h-[34px] leading-[34px] bg-[rgb(237,231,246)] text-center  text-[rgb(94,53,177)] rounded-[8px] cursor-pointer hover:(bg-[rgb(94,53,177)] text-[rgb(237,231,246)])'

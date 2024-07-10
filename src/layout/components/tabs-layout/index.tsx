@@ -1,8 +1,10 @@
-import React, { Suspense, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Tabs, Dropdown } from 'antd';
 import { KeepAliveTab, useTabs } from '@/hooks/use-tabs';
 import { antdIcons } from '@/assets/add-icons';
 import { router } from '@/router';
+
+import './index.scss';
 
 import type { MenuItemType } from 'antd/es/menu/interface';
 
@@ -76,9 +78,9 @@ const TabsLayout: React.FC = () => {
 				key: tab.routePath,
 				label: renderTabTitle(tab),
 				children: (
-					<Suspense fallback={<div>loading...</div>}>
-						<div key={tab.key}>{tab.children}</div>
-					</Suspense>
+					<div key={tab.key} className='h-full'>
+						{tab.children}
+					</div>
 				),
 				closable: tabs.length > 1 // 剩最后一个就不能删除了
 			};
@@ -101,6 +103,7 @@ const TabsLayout: React.FC = () => {
 	return (
 		<Tabs
 			type='editable-card'
+			className='tabs-container'
 			activeKey={activeTabRoutePath}
 			items={tabItems}
 			onChange={onTabsChange}
